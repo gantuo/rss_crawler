@@ -4,8 +4,9 @@ from bs4 import BeautifulSoup
 import json
 import re
 import traceback
-
-head = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:45.0) Gecko/20100101 Firefox/45.0..'}
+from datetime import datetime
+from time import mktime
+head = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36'}
 
 
 def parse_entry(source, entry):
@@ -16,8 +17,8 @@ def parse_entry(source, entry):
     html = response.read().decode('utf-8')  # 读取内容
     soup = BeautifulSoup(html, 'html.parser')
     text = '\n'.join([item.text for item in soup.find_all('p')])
-
-    return {'title': title, 'date': '', 'text': text}
+    dt = datetime.fromtimestamp(mktime(entry['published_parsed']))
+    return {'title': title, 'date': dt.strftime('%Y-%m-%d %H:%M:%S'), 'text': text}
 
 
 def parse(source, url):
@@ -26,6 +27,7 @@ def parse(source, url):
 
     # 获取RSS源的标题、链接、摘要等信息
     texts = []
+    print(f'feed {source} has {len(rss.entries)} articles')
     for entry in rss.entries:
         try:
             text = parse_entry(source, entry)
@@ -38,35 +40,49 @@ def parse(source, url):
 def post_process(text):
     return re.sub('(\n.?)+', '\n', text).replace(u'\xa0', '')
 
+def process(input):
+    source,url = input
+    print(f'processing rss feed: {source}, url: {url}')
+    try:
+        texts = parse(source, url)
+        if len(texts) == 0:
+            return
+        with open(f'output/{source}.json', 'w', encoding='utf-8') as f:
+            for text in texts:
+                try:
+                    f.write(json.dumps(text, ensure_ascii=False) + '\n')
+                except Exception:
+                    print(traceback.format_exc())
+    except Exception:
+        print(traceback.format_exc())
+        print(url)
+    print(f'rss feed done: {source}')
 
 if __name__ == '__main__':
     urls = {
+        # entertainment
+        # 'Variety':'https://variety.com/feed/',
+        'The Hollywood Reporter':'https://www.hollywoodreporter.com/feed/',
+        'Screen Rant':'https://screenrant.com/feed/',
+        # fashion
+        'Elle Magazine':'https://www.elle.com/rss/all.xml/',
+        # science
+        'Scientific American': 'http://rss.sciam.com/ScientificAmerican-Global',
+
+        # 'Nature':'https://www.nature.com/nature.rss',
         'BBC News': 'http://feeds.bbci.co.uk/news/rss.xml?edition=uk',
         'TechCrunch': 'http://feeds.feedburner.com/TechCrunch/',
-        'Scientific American': 'http://rss.sciam.com/ScientificAmerican-Global',
-        # 'Vogue': 'http://www.vogue.com/rss',
         'ESPN': 'http://www.espn.com/espn/rss/news',
-        # 'Entertainment Weekly': 'https://feeds.feedburner.com/entertainmentweekly',
         'WebMD': 'https://rssfeeds.webmd.com/rss/rss.aspx?RSSSource=RSS_PUBLIC',
         'The Economist': 'https://www.economist.com/finance-and-economics/rss.xml',
-        'Edutopia': 'http://www.edutopia.org/rss.xml',
+        # 'Edutopia': 'http://www.edutopia.org/rss.xml',
         'Lonely Planet': 'http://www.lonelyplanet.com/rss/feeds.blogs.xml',
     }
 
-    for source, url in urls.items():
-        try:
-            texts = parse(source, url)
-            if len(texts) == 0:
-                continue
-            with open(f'output/{source}.json', 'w', encoding='utf-8') as f:
-                for text in texts:
-                    try:
-                        f.write(json.dumps(text, ensure_ascii=False) + '\n')
-                    except Exception:
-                        print(traceback.format_exc())
+    from multiprocessing import Pool
 
+    # 进程数
+    num_workers = len(urls)
+    with Pool(num_workers) as p:
+        p.map(process,urls.items())
 
-        except Exception:
-            print(traceback.format_exc())
-            print(url)
-        print('#####################################################\n')
