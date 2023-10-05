@@ -6,6 +6,9 @@ import re
 import traceback
 from datetime import datetime
 from time import mktime
+import sys
+import os
+
 head = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36'}
 
 
@@ -47,7 +50,10 @@ def process(input):
         texts = parse(source, url)
         if len(texts) == 0:
             return
-        with open(f'output/{source}.json', 'w', encoding='utf-8') as f:
+        path = f'output/20231005/'
+        if not os.path.exists(path):
+            os.mkdir(path)
+        with open(f'{path}/{source}.json', 'w', encoding='utf-8') as f:
             for text in texts:
                 try:
                     f.write(json.dumps(text, ensure_ascii=False) + '\n')
