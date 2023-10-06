@@ -50,7 +50,7 @@ def process(input):
         texts = parse(source, url)
         if len(texts) == 0:
             return
-        path = f'output/20231005/'
+        path = f'output/20231006/'
         if not os.path.exists(path):
             os.mkdir(path)
         with open(f'{path}/{source}.json', 'w', encoding='utf-8') as f:
