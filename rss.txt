@@ -1,11 +1,7 @@
-'BBC News':'http://feeds.bbci.co.uk/news/rss.xml?edition=uk',
-'TechCrunch':'http://feeds.feedburner.com/TechCrunch/',
-'Scientific American':'https://www.scientificamerican.com/rss/',
-'Vogue':'http://www.vogue.com/rss',
-'ESPN':'http://www.espn.com/espn/rss/news',
-'Entertainment Weekly':'http://feeds.feedburner.com/entertainmentweekly/latest',
-'WebMD':'https://rssfeeds.webmd.com/rss/rss.aspx?RSSSource=RSS_PUBLIC',
-'The Economist':'https://www.economist.com/sections/business-finance/rss.xml',
-'Edutopia':'http://www.edutopia.org/rss.xml',
-'Lonely Planet':'http://www.lonelyplanet.com/rss/feeds.blogs.xml',
-
+"时政新闻":"http://www.people.com.cn/rss/politics.xml",
+"社会新闻":"http://www.people.com.cn/rss/society.xml",
+"法治新闻":"http://www.people.com.cn/rss/legal.xml",
+"国际新闻":"http://www.people.com.cn/rss/world.xml",
+"台港澳新闻":"http://www.people.com.cn/rss/haixia.xml",
+"军事新闻":"http://www.people.com.cn/rss/military.xml",
+"全部新闻":"http://www.people.com.cn/rss/ywkx.xml

@@ -9,7 +9,8 @@ from time import mktime
 import sys
 import os
 
-head = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36'}
+head = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36'}
 
 
 def parse_entry(source, entry):
@@ -43,14 +44,15 @@ def parse(source, url):
 def post_process(text):
     return re.sub('(\n.?)+', '\n', text).replace(u'\xa0', '')
 
+
 def process(input):
-    source,url = input
+    source, url = input
     print(f'processing rss feed: {source}, url: {url}')
     try:
         texts = parse(source, url)
         if len(texts) == 0:
             return
-        path = f'output/20231006/'
+        path = f'output/20231009/'
         if not os.path.exists(path):
             os.mkdir(path)
         with open(f'{path}/{source}.json', 'w', encoding='utf-8') as f:
@@ -64,14 +66,15 @@ def process(input):
         print(url)
     print(f'rss feed done: {source}')
 
+
 if __name__ == '__main__':
     urls = {
         # entertainment
         # 'Variety':'https://variety.com/feed/',
-        'The Hollywood Reporter':'https://www.hollywoodreporter.com/feed/',
-        'Screen Rant':'https://screenrant.com/feed/',
+        'The Hollywood Reporter': 'https://www.hollywoodreporter.com/feed/',
+        'Screen Rant': 'https://screenrant.com/feed/',
         # fashion
-        'Elle Magazine':'https://www.elle.com/rss/all.xml/',
+        'Elle Magazine': 'https://www.elle.com/rss/all.xml/',
         # science
         'Scientific American': 'http://rss.sciam.com/ScientificAmerican-Global',
 
@@ -84,11 +87,28 @@ if __name__ == '__main__':
         # 'Edutopia': 'http://www.edutopia.org/rss.xml',
         'Lonely Planet': 'http://www.lonelyplanet.com/rss/feeds.blogs.xml',
     }
+    urls_cn = {
+        # tech
+        "极客公园": "https://www.geekpark.net/rss",
+        "爱范儿": "https://www.ifanr.com/feed",
+        "36氪": "https://36kr.com/feed-article",
+        "虎嗅": "https://rss.huxiu.com/",
+
+        # authority
+        "人民网时政新闻": "http://www.people.com.cn/rss/politics.xml",
+
+        # game
+        "机核": "https://www.gcores.com/rss",
+        "研游社": "https://www.yystv.cn/rss/feed",
+        "触乐": "https://rsshub.app/chuapp/index/daily",
+        # animation
+        "005tv": "https://rsshub.app/005tv/zx/latest",
+    }
 
     from multiprocessing import Pool
 
+    urls.update(urls_cn)
     # 进程数
     num_workers = len(urls)
     with Pool(num_workers) as p:
-        p.map(process,urls.items())
-
+        p.map(process, urls.items())
