@@ -52,7 +52,8 @@ def process(input):
         texts = parse(source, url)
         if len(texts) == 0:
             return
-        path = f'output/20231009/'
+        date = datetime.now().strftime('%Y%m%d')
+        path = f'output/{date}/'
         if not os.path.exists(path):
             os.mkdir(path)
         with open(f'{path}/{source}.json', 'w', encoding='utf-8') as f:
@@ -108,6 +109,7 @@ if __name__ == '__main__':
     from multiprocessing import Pool
 
     urls.update(urls_cn)
+    # urls = urls_cn
     # 进程数
     num_workers = len(urls)
     with Pool(num_workers) as p:
