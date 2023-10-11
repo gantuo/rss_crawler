@@ -146,8 +146,8 @@ def run_par():
 
     from multiprocessing import Pool
 
-    # urls.update(urls_cn)
-    urls = urls_cn
+    urls.update(urls_cn)
+    # urls = urls_cn
     # 进程数
     num_workers = len(urls)
 
