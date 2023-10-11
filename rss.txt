@@ -1,7 +1,0 @@
-"时政新闻":"http://www.people.com.cn/rss/politics.xml",
-"社会新闻":"http://www.people.com.cn/rss/society.xml",
-"法治新闻":"http://www.people.com.cn/rss/legal.xml",
-"国际新闻":"http://www.people.com.cn/rss/world.xml",
-"台港澳新闻":"http://www.people.com.cn/rss/haixia.xml",
-"军事新闻":"http://www.people.com.cn/rss/military.xml",
-"全部新闻":"http://www.people.com.cn/rss/ywkx.xml
