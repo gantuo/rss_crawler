@@ -6,9 +6,11 @@ from datetime import datetime
 def read(root,paths,result:defaultdict):
     for path in paths:
         feed = path.split('/')[-1].replace('.json','')
-        with open(f'{root}/{path}','r',encoding='utf-8') as f:
+        p = f'{root}/{path}'
+        with open(p,'r',encoding='utf-8') as f:
+            print(f'reading file: {p}')
             items=[json.loads(line) for line in f.readlines()]
-            result[feed] +=items
+            result[feed] += items
 def get_docs():
     result = defaultdict(list)
     for root, dirs, files in os.walk('output/'):
