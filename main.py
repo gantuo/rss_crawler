@@ -12,6 +12,8 @@ from utils import *
 head = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36'}
 
+output_path = create_output_dir()
+
 
 def from_link(source, link):
     req = urllib.request.Request(link, headers=head)  # 伪造请求头
@@ -81,8 +83,7 @@ def process(input):
         texts = parse(source, url)
         if len(texts) == 0:
             return
-        path = create_output_dir()
-        with open(f'{path}/{source}.json', 'w', encoding='utf-8') as f:
+        with open(f'{output_path}/{source}.json', 'w', encoding='utf-8') as f:
             for text in texts:
                 try:
                     f.write(json.dumps(text, ensure_ascii=False) + '\n')
