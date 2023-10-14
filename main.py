@@ -8,7 +8,7 @@ from datetime import datetime
 from time import mktime
 import sys
 import os
-
+from utils import *
 head = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36'}
 
@@ -51,15 +51,6 @@ def parse_entry(source, entry):
     return {'title': title, 'date': dt.strftime('%Y-%m-%d %H:%M:%S'), 'text': text}
 
 
-def filter_text(text):
-    if len(text) < 100:
-        raise Warning(f'text too short: {text}')
-    m = re.findall('[^\n]+?：.+?\n', text, re.S)
-    if m:
-        matched_text = ''.join(m)
-        if len(matched_text) / len(text) > 0.7:
-            raise Warning(f'match bad pattern: {text}')
-
 
 def parse(source, url):
     # 解析RSS源
@@ -90,10 +81,7 @@ def process(input):
         texts = parse(source, url)
         if len(texts) == 0:
             return
-        date = datetime.now().strftime('%Y%m%d')
-        path = f'output/{date}/'
-        if not os.path.exists(path):
-            os.mkdir(path)
+        path = create_output_dir()
         with open(f'{path}/{source}.json', 'w', encoding='utf-8') as f:
             for text in texts:
                 try:
